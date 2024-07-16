@@ -25,6 +25,6 @@ flux bootstrap github \
   --owner=$GITHUB_USER \
   --repository=fluxcd-weavegitops \
   --branch=main \
-  --path=applications/demo-application-k8s-manifests/manifests \
+  --path=clusters/eks-bottlerocket-cluster/dev \
   --personal
 ```
