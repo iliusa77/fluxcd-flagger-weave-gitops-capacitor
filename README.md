@@ -67,15 +67,24 @@ gitops create dashboard weave-gitops-dashboard-default \
   --export > ./clusters/eks-bottlerocket-cluster/dev/02-weave-gitops-dashboard-default.yaml
 ```
 
-Weave GitOps Dashboard port forwarding
+Weave GitOps Dashboard port forwarding (`flux-system` namespace)
 ```
-kubectl -n flux-system port-forward svc/ww-gitops-weave-gitops 9001:9001
+kubectl -n flux-system port-forward svc/weave-gitops-dashboard-flux-system 9001:9001
 ```
 
 Open in browser http://127.0.0.1:9001
+- username: admin
+- password: AeHoo+h1aingi9caih1a
 
-username: admin
-password: AeHoo+h1aingi9caih1a
+Weave GitOps Dashboard port forwarding (`default` namespace)
+```
+kubectl -n default port-forward svc/weave-gitops-dashboard-default 9002:9001
+```
+
+Open in browser http://127.0.0.1:9002
+- username: admin
+- password: AeHoo+h1aingi9caih1a
+
 
 ### Capacitor
 
@@ -117,3 +126,55 @@ kubectl -n flux-system port-forward svc/capacitor 9000:9000
 ```
 
 Open in browser http://127.0.0.1:9000
+
+### Flagger 
+Add Flagger Helm repository:
+```
+helm repo add flagger https://flagger.app
+```
+
+Install Flagger’s Canary CRD:
+```
+kubectl apply -f https://raw.githubusercontent.com/fluxcd/flagger/main/artifacts/flagger/crd.yaml
+```
+
+Deploy Flagger for Istio:
+```
+helm upgrade -i flagger flagger/flagger \
+--namespace=istio-system \
+--create-namespace
+--set crd.create=false \
+--set meshProvider=istio \
+--set metricsServer=http://prometheus:9090
+```
+
+Check chart
+```
+helm ls -n istio-system
+NAME    NAMESPACE       REVISION        UPDATED                                         STATUS          CHART           APP VERSION
+flagger istio-system    1               2024-07-18 01:38:43.833644952 +0300 EEST        deployed        flagger-1.37.0  1.37.0
+```
+
+Flagger comes with a Grafana dashboard made for canary analysis. Install Grafana with Helm:
+```
+helm upgrade -i flagger-grafana flagger/grafana \
+--set url=http://prometheus:9090
+```
+Run the port forward command:
+```
+kubectl -n flux-system port-forward svc/flagger-grafana 3000:80
+```
+
+http://localhost:3000
+
+### GitRepository and Kustomization
+```
+kubectl get gitrepository -n flux-system
+NAME          URL                                                AGE   READY   STATUS
+flux-system   ssh://git@github.com/iliusa77/fluxcd-weavegitops   17h   True    stored artifact for revision 'main@sha1:53765784d01708c884b47c876fdd11656f193d7a'
+
+kubectl get kustomization -n flux-system
+NAME          AGE   READY   STATUS
+capacitor     13h   True    Applied revision: v0.4.2@sha256:1e72940be8383cd5054e3efcff8ec36f27e33959a4b940fc4b956c932083578b
+flux-system   17h   True    Applied revision: main@sha1:53765784d01708c884b47c876fdd11656f193d7a
+```
