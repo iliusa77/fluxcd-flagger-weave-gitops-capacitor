@@ -52,11 +52,19 @@ sudo mv /tmp/gitops /usr/local/bin
 gitops version
 ```
 
-Weave GitOps Dashboard creation
+Weave GitOps Dashboard creation (`flux-system` namespace)
 ```
-gitops create dashboard ww-gitops \
+gitops create dashboard weave-gitops-dashboard-flux-system \
   --password=AeHoo+h1aingi9caih1a \
-  --export > ./clusters/eks-bottlerocket-cluster/dev/02-weave-gitops-dashboard.yaml
+  --export > ./clusters/eks-bottlerocket-cluster/dev/02-weave-gitops-dashboard-flux-system.yaml
+```
+
+Weave GitOps Dashboard creation (`default` namespace)
+```
+gitops create dashboard weave-gitops-dashboard-default \
+  --namespace=default \
+  --password=AeHoo+h1aingi9caih1a \
+  --export > ./clusters/eks-bottlerocket-cluster/dev/02-weave-gitops-dashboard-default.yaml
 ```
 
 Weave GitOps Dashboard port forwarding
