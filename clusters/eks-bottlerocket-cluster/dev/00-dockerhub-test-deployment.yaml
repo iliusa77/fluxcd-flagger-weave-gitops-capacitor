@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: hello-world-python
-        image: iliusa77/hello-world-python:latest
+        image: iliusa77/hello-world-python:release-0.0.3
       imagePullSecrets:
       - name: dockerhub-creds
         ports:
