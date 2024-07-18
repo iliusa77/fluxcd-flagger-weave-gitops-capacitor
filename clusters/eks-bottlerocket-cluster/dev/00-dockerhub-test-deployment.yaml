@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-python-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: hello-world-python
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: hello-world-python
+    spec:
+      containers:
+      - name: hello-world-python
+        image: iliusa77/hello-world-python
+      imagePullSecrets:
+      - name: dockerhub-creds
+        ports:
+        - containerPort: 5000

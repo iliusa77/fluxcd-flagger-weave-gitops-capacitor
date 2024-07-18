@@ -25,8 +25,14 @@ flux bootstrap github \
   --owner=$GITHUB_USER \
   --repository=fluxcd-weavegitops \
   --branch=main \
+  --components-extra=image-reflector-controller,image-automation-controller \
   --path=clusters/eks-bottlerocket-cluster/dev \
   --personal
+```
+
+Define DockerHub credentials 
+```
+kubectl create secret docker-registry dockerhub-creds --docker-username='' --docker-password='' --docker-email='' -n default
 ```
 
 ### Application
